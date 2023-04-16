@@ -1,6 +1,11 @@
 package com.example.quizapp
 
 object Constants {
+
+    const val userName = "userName"
+    const val totalQuestions = "totalQuestions"
+    const val correctAnswers = "correctAnswers"
+
     fun getQuestions(): ArrayList<Question> {
         val questionsList = ArrayList<Question>()
 

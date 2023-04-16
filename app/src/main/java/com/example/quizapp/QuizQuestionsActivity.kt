@@ -1,11 +1,11 @@
 package com.example.quizapp
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.ProgressBar
@@ -26,10 +26,14 @@ class QuizQuestionsActivity : AppCompatActivity() {
 
     private var currentQuestion: Int = 0
     private var selectedOption: Int = 0
+    private var correctAnswers: Int = 0
+    private var userName: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_quiz_questions)
+
+        userName = intent.getStringExtra(Constants.userName)
 
         tvQuestion = findViewById(R.id.tvQuestion)
         ivImage = findViewById(R.id.iv_image)
@@ -49,35 +53,47 @@ class QuizQuestionsActivity : AppCompatActivity() {
         setQuestion(questionsList)
 
         tvOptionOne?.setOnClickListener {
-            handleOptionClick(it,1)
+            handleOptionClick(1)
         }
 
         tvOptionTwo?.setOnClickListener {
-            handleOptionClick(it,2)
+            handleOptionClick(2)
         }
 
         tvOptionThree?.setOnClickListener {
-            handleOptionClick(it,3)
+            handleOptionClick(3)
         }
 
         tvOptionFour?.setOnClickListener {
-            handleOptionClick(it,4)
+            handleOptionClick(4)
         }
 
         btnSubmit?.setOnClickListener {
             btnSubmit?.isEnabled = false
-            if (currentQuestion < questionsList.size && selectedOption != 0) {
+            if (selectedOption != 0) {
                 answerView(questionsList[currentQuestion].correctAnswer, R.drawable.correct_option_bg)
 
                 if (selectedOption != questionsList[currentQuestion].correctAnswer) {
                     answerView(selectedOption, R.drawable.incorrect_option_bg)
+                } else {
+                    correctAnswers += 1
                 }
 
                 Handler(Looper.getMainLooper()).postDelayed({
                     currentQuestion += 1
-                    setQuestion(questionsList)
-                    resetOptionState()
-                    selectedOption = 0
+                    if (currentQuestion < questionsList.size) {
+                        setQuestion(questionsList)
+                        resetOptionState()
+                        selectedOption = 0
+                    } else {
+                        val intent = Intent(this, ResultActivity::class.java)
+                        intent.putExtra(Constants.userName, userName)
+                        intent.putExtra(Constants.totalQuestions, questionsList.size)
+                        intent.putExtra(Constants.correctAnswers, correctAnswers)
+                        startActivity(intent)
+                        finish()
+                    }
+
                 }, 2000)
             }
         }
@@ -109,7 +125,7 @@ class QuizQuestionsActivity : AppCompatActivity() {
         tvOptionFour?.setBackgroundResource(R.drawable.default_option_border_bg)
     }
 
-    private fun handleOptionClick(view: View, selectedOption: Int) {
+    private fun handleOptionClick(selectedOption: Int) {
         this.selectedOption = selectedOption
         resetOptionState()
         answerView(selectedOption, R.drawable.selected_option_border_bg)

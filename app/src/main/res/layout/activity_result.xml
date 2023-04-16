@@ -22,8 +22,8 @@
 
     <ImageView
         android:id="@+id/iv_trophy"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
         android:contentDescription="image"
         android:src="@drawable/ic_trophy"/>
 
@@ -55,5 +55,16 @@
         android:textColor="@android:color/secondary_text_dark"
         android:textSize="20sp"
         android:text="Your score is 9 out of 10" />
+    
+    <Button
+        android:id="@+id/btn_finish"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="@color/white"
+        android:text="@string/finish"
+        android:textColor="@color/design_default_color_primary"
+        android:textSize="18sp"
+        android:textStyle="bold"/>
 
 </LinearLayout>
